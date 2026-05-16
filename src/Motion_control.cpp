@@ -208,6 +208,7 @@ static constexpr uint64_t DM_AUTO_S1_FAIL_RETRACT_MS   = 1500ull;  // 1.5s
 
 static constexpr float    DM_AUTO_S2_TARGET_M          = 0.120f;   // 120mm
 static constexpr float    DM_AUTO_BUF_ABORT_PCT        = 75.0f;    // abort push
+static constexpr float    DM_AUTO_BUF_PAUSE_PCT      = 60.0f;    // pause push above this
 static constexpr float    DM_AUTO_BUF_RECOVER_PCT      = 50.2f;    // retract-to (try 1/2)
 static constexpr uint64_t DM_AUTO_FAIL_EXTRA_MS        = 1500ull;  // extra retract after fail
 static constexpr float    DM_AUTO_PWM_PUSH             = 900.0f;   // push strength
@@ -1234,6 +1235,10 @@ public:
 
                                     MC_STU_RGB_set(CHx, 0x38, 0x35, 0x32);
                                     dm_autoload_x = 0.0f;
+                                }
+                                else if (MC_PULL_pct_f[CHx] > DM_AUTO_BUF_PAUSE_PCT) 
+                                {
+                                    dm_autoload_x = 0.0f; 
                                 }
                                 else
                                 {
